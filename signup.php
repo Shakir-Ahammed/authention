@@ -45,7 +45,7 @@ else {
   </head>
   <body>
     <div class="container">
-      <form action="process_signup.php" method="POST">
+      <form action="signup.php" method="POST">
         <label for="name">Name:</label> <br />
         <input type="text" id="name" name="name" required />
         <br />
@@ -59,7 +59,7 @@ else {
         <label for="password">Password:</label> <br />
         <input type="password" id="password" name="password" required />
         <br />
-        <input type="submit" value="Sign Up" />
+        <input type="submit" name="Submit" value="Sign Up" />
       </form>
 
       <p class="ch">Already have an account? <a href="login.php">Login</a></p>
