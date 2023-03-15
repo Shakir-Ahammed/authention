@@ -17,9 +17,29 @@ if (isset($_POST['submit'])) {
     $regi = $_POST['Regignition'];
     $salary = $_POST['Salary'];
     $status = $_POST['Status'];
+
+    $query_run = mysqli_query($conn, "SELECT MAX(uid) as uid FROM emp");
+    //$uid_fetch = mysqli_fetch_array($query_run);
+    //  $uid = $uid_fetch["uid"];
     //$time = date("Y/m/d");
     //j $upby = $_SESSION['name'];
+    // if ($uid != '') {
+    //     $uid = 0;
+    // } else {
+    //     $uid++;
+    // }
 
+    if (mysqli_num_rows($query_run) > 0) {
+        // Fetch the result
+        $row = mysqli_fetch_assoc($query_run);
+        $uid = $row['uid'];
+        $uid++;
+    } else {
+        $uid = 0;
+    }
+
+
+    //echo $uid;
     foreach ($name as $index => $names) {
 
         $s_nanme = $names;
@@ -34,10 +54,11 @@ if (isset($_POST['submit'])) {
         // echo $s_nanme . $s_email . $s_mobile . $s_gender . $s_dob . $s_salary . $s_regi . $s_status . 'index' . $index;
         // $s_session = $session;
 
-        $query = "INSERT INTO `emp`(`name`, `email`, `mobile`, `gender`, `dateofb`, `Regignition`, `Salary`,`Status` ) 
-        VALUES ('$s_nanme','$s_email',$s_mobile,'$s_gender','$s_dob','$s_regi',$s_salary,$s_status )";
+        $query = "INSERT INTO `emp`(`name`, `email`, `mobile`, `gender`, `dateofb`, `Regignition`, `Salary`,`Status`,`uid` ) 
+        VALUES ('$s_nanme','$s_email',$s_mobile,'$s_gender','$s_dob','$s_regi',$s_salary,$s_status,$uid )";
 
         $query_run = mysqli_query($conn, $query);
+        echo $query;
     }
 
     // if ($query != '') {

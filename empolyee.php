@@ -16,7 +16,7 @@ if (isset($_SESSION['name'])) {
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="empstyle.css" />
-
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" />
 
@@ -24,6 +24,7 @@ if (isset($_SESSION['name'])) {
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap-theme.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <!-- Latest compiled and minified JavaScript -->
+    <link href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 
     <title>Document</title>
@@ -34,9 +35,11 @@ if (isset($_SESSION['name'])) {
         <h1 class="title">Employee List</h1>
         <div class="container">
             <!-- Button trigger modal -->
-            <button type="button" class="btn btn-success" id="addemp" data-toggle="modal" data-target="#exampleModalCenter">
-                <i class="fa fa-plus"></i> Add Employee
-            </button>
+            <div class="float-end">
+                <button type="button" class="btn btn-success" id="addemp" data-toggle="modal" data-target="#exampleModalCenter">
+                    <i class="fa fa-plus"></i> Add Employee
+                </button>
+            </div>
 
             <!-- Modal -->
             <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
@@ -162,24 +165,39 @@ if (isset($_SESSION['name'])) {
     </div>
     </div>
     <div class="container-fluid">
-        <table class="table">
-            <tr>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Mobile</th>
-                <th>Gender</th>
-                <th>Birthday</th>
-                <th>Regignition</th>
-                <th>Salary</th>
-                <th> Status </th>
+        <table id="myTable" class="display" class="table-responsive">
+            <thead>
+                <tr>
+                    <th>No</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Mobile</th>
+                    <th>Gender</th>
+                    <th>Birthday</th>
+                    <th>Regignition</th>
+                    <th>Salary</th>
+                    <th> Status </th>
+                    <th>UID</th>
+                    <th>Action</th>
+                </tr>
+
+            </thead>
+            <tbody>
                 <?php $sql = "select * from emp";
+                $count = 1;
                 $result = mysqli_query($conn, $sql) or die("failed");
                 $output = "";
                 if (mysqli_num_rows($result) > 0) {
                     $output;
 
-                    while ($row = mysqli_fetch_assoc($result)) {
-                        $output .= "<tr>
+                    $output = "";
+                    $prev_id = "";
+                    foreach ($result as $index => $row) {
+                        $current_id = $row['uid'];
+                        $rowSpan = '';
+                        if ($current_id != $prev_id) {
+                            $output .= " <tr>
+                             <td>{$count}</td>
                              <td>{$row['name']}</td>
                              <td>{$row['email']}</td>
                              <td>{$row['mobile']}</td>
@@ -187,7 +205,28 @@ if (isset($_SESSION['name'])) {
                              <td>{$row['dateofb']}</td>
                              <td>{$row['Regignition']}</td>
                              <td>{$row['Salary']}</td>
-                             <td>{$row['Status']}</td>";
+                             <td>{$row['Status']}</td>
+                             <td>{$row['uid']}</td>
+                             <td rowspan=''><button onclick='update(" . $row['uid'] . ")' class='btn btn-success'>Update</button></td>
+                             </tr>";
+                            $prev_id = $current_id;
+                        } else {
+                            $output .= " <tr>
+                                <td>{$count}</td>
+                                <td>{$row['name']}</td>
+                                <td>{$row['email']}</td>
+                                <td>{$row['mobile']}</td>
+                                <td>{$row['gender']}</td>
+                                <td>{$row['dateofb']}</td>
+                                <td>{$row['Regignition']}</td>
+                                <td>{$row['Salary']}</td>
+                                <td>{$row['Status']}</td>
+                                <td>{$row['uid']}</td>
+                                <td ></td>
+                                </tr>";
+                        }
+
+                        $count++;
                     }
 
 
@@ -198,7 +237,7 @@ if (isset($_SESSION['name'])) {
                 }
                 ?>
 
-            </tr>
+            </tbody>
 
 
         </table>
@@ -208,7 +247,12 @@ if (isset($_SESSION['name'])) {
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js"></script>
 
     <script src="https://code.jquery.com/jquery-3.6.4.js"></script>
-
+    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#myTable').DataTable();
+        });
+    </script>
     <script src="app.js"></script>
 
 </body>

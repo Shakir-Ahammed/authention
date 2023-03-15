@@ -26,3 +26,7 @@ $(document).ready(function () {
     $(this).closest(".main-form").remove();
   });
 });
+
+function update(data) {
+  console.log(data);
+}
